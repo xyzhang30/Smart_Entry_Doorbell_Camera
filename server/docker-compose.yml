@@ -1,0 +1,51 @@
+services:
+  frontend: 
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_BASE_URL=http://localhost:8080
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: flask --app __init__.py run --reload --debugger --host=0.0.0.0
+    volumes:
+      - ./backend:/srv/app
+      - ./captures:/srv/app/captures
+    stdin_open: true
+    tty: true
+    ports:
+      - 8080:5000
+    container_name: flask_backend
+    environment:
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASSWORD=notarealpassword
+      - POSTGRES_DB=development
+      - POSTGRES_HOST=db
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: notarealpassword
+      POSTGRES_DB: development
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - db_data:/var/lib/postgresql/data/pgdata
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 5001:8080
+  
+volumes:
+  db_data:
