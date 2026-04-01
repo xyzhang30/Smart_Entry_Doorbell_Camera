@@ -7,6 +7,7 @@ services:
       - ./frontend:/app
     ports:
       - 3000:3000
+    container_name: doorbellcam_frontend
     environment:
       - REACT_APP_BASE_URL=http://localhost:8080
   
@@ -22,7 +23,10 @@ services:
     tty: true
     ports:
       - 8080:5000
-    container_name: flask_backend
+    container_name: doorbellcam_backend
+    depends_on:
+      db:
+        condition: service_healthy
     environment:
       - POSTGRES_USER=test_user
       - POSTGRES_PASSWORD=notarealpassword
@@ -33,19 +37,27 @@ services:
     image: postgres
     restart: always
     shm_size: 128mb
+    container_name: doorbellcam_db
     environment:
-      POSTGRES_USER: test_user
-      POSTGRES_PASSWORD: notarealpassword
+      POSTGRES_USER: 655_user
+      POSTGRES_PASSWORD: zxy123456
       POSTGRES_DB: development
       PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d development"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
-      - db_data:/var/lib/postgresql/data/pgdata
+      - db_data_655:/var/lib/postgresql/data/pgdata
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 5001:8080
+    container_name: doorbellcam_dbadminer
   
 volumes:
-  db_data:
+  db_data_655:
