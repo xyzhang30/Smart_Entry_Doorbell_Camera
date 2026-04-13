@@ -8,6 +8,7 @@ bp = Blueprint('camera', __name__, url_prefix = '/camera')
 
 IMAGE_STORE_BASE_PATH = "/srv/app/captures"
 
+
 @bp.route('/append_logentry', methods=['POST'])
 def add_user():
     '''
@@ -43,3 +44,20 @@ def add_user():
         return jsonify({"msg": "Raw log entry saved", "path": fpath}), 201
     except Exception as e:
         return jsonify({"msg": "Database error", "error": str(e)}), 500
+
+
+
+@bp.route('/get_logs', methods=['GET'])
+def get_logs():
+    '''
+    fetch all log entries from the database for display on frontend
+    '''
+    logs = Camera.all()
+    output = []
+    for log in logs:
+        output.append({
+            "id": log.id,
+            "image": log.image,
+            "timestamp": log.timestamp.isoformat() # Convert datetime to string
+        })
+    return jsonify(output)
