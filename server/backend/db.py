@@ -18,6 +18,7 @@ def init_db(app):
         # CRITICAL: You MUST import the model inside this function 
         # BEFORE calling create_all so SQLAlchemy "sees" it.
         from .models.user import User 
+        from .models.camera import Camera
         
         # Simple retry loop to handle the DB boot-up lag
         for i in range(10):
