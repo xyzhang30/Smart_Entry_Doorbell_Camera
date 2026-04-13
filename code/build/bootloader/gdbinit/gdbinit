@@ -1,0 +1,2 @@
+source /Users/annieyang/ECE-COMPSCI-655/final/build/bootloader/gdbinit/symbols
+source /Users/annieyang/ECE-COMPSCI-655/final/build/bootloader/gdbinit/connect

@@ -1,0 +1,111 @@
+Command: /Users/annieyang/.espressif/python_env/idf5.5_py3.12_env/bin/python /Users/annieyang/esp/esp-idf/tools/idf_monitor.py -p /dev/cu.usbmodem1101 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /Users/annieyang/ECE-COMPSCI-655/final/build/final.elf /Users/annieyang/ECE-COMPSCI-655/final/build/bootloader/bootloader.elf -m '/Users/annieyang/.espressif/python_env/idf5.5_py3.12_env/bin/python' '/Users/annieyang/esp/esp-idf/tools/idf.py' '-p' '/dev/cu.usbmodem1101'
+ the binary image header(2048k). Using the size in ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xa (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40048839
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x159c
+load:0x403c8700,len:0xd24
+load:0x403cb700,len:0x2f48
+entry 0x403c8924
+[0;32mI (18) boot: ESP-IDF v5.5 2nd stage bootloader[0m
+[0;32mI (18) boot: compile time Apr  1 2026 15:34:53[0m
+[0;32mI (18) boot: Multicore bootloader[0m
+[0;32mI (19) boot: chip revision: v0.2[0m
+[0;32mI (21) boot: efuse block revision: v1.3[0m
+[0;32mI (24) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (28) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (32) boot.esp32s3: SPI Flash Size : 2MB[0m
+[0;32mI (36) boot: Enabling RNG early entropy source...[0m
+[0;32mI (40) boot: Partition Table:[0m
+[0;32mI (43) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (49) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (56) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (62) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (69) boot: End of partition table[0m
+[0;32mI (72) esp_image: segment 0: paddr=00010020 vaddr=3c060020 size=139c4h ( 80324) map[0m
+[0;32mI (94) esp_image: segment 1: paddr=000239ec vaddr=3fc96000 size=02d3ch ( 11580) load[0m
+[0;32mI (97) esp_image: segment 2: paddr=00026730 vaddr=40374000 size=098e8h ( 39144) load[0m
+[0;32mI (106) esp_image: segment 3: paddr=00030020 vaddr=42000020 size=5d078h (381048) map[0m
+[0;32mI (174) esp_image: segment 4: paddr=0008d0a0 vaddr=4037d8e8 size=0865ch ( 34396) load[0m
+[0;32mI (181) esp_image: segment 5: paddr=00095704 vaddr=600fe000 size=00020h (    32) load[0m
+[0;32mI (189) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (189) boot: Disabling RNG early entropy source...[0m
+[0;32mI (199) cpu_start: Multicore app[0m
+[0;32mI (208) cpu_start: Pro cpu start user code[0m
+[0;32mI (209) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (209) app_init: Application information:[0m
+[0;32mI (209) app_init: Project name:     final[0m
+[0;32mI (212) app_init: App version:      cca60b0-dirty[0m
+[0;32mI (217) app_init: Compile time:     Apr  1 2026 15:34:29[0m
+[0;32mI (222) app_init: ELF file SHA256:  9e0ea578b...[0m
+[0;32mI (226) app_init: ESP-IDF:          v5.5[0m
+[0;32mI (230) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (234) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (238) efuse_init: Chip rev:         v0.2[0m
+[0;32mI (242) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (248) heap_init: At 3FCA9A08 len 0003FD08 (255 KiB): RAM[0m
+[0;32mI (253) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+[0;32mI (258) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+[0;32mI (263) heap_init: At 600FE020 len 00001FC8 (7 KiB): RTCRAM[0m
+[0;32mI (270) spi_flash: detected chip: gd[0m
+[0;32mI (272) spi_flash: flash io: dio[0m
+[0;33mW (275) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (288) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (293) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (300) main_task: Started on CPU0[0m
+[0;32mI (310) main_task: Calling app_main()[0m
+New Raw: 37
+[0;32mI (310) final_project: Turn off LCD backlight[0m
+[0;32mI (310) final_project: Initialize SPI bus[0m
+[0;32mI (320) final_project: Install panel IO[0m
+[0;32mI (320) final_project: Install ILI9341 panel driver[0m
+[0;32mI (320) ili9341: LCD panel create success, version: 1.2.0[0m
+[0;32mI (450) final_project: Turn on LCD backlight[0m
+[0;32mI (450) final_project: Initialize LVGL library[0m
+[0;32mI (450) LVGL: Starting LVGL task[0m
+[0;32mI (55520) final_project: Hit #1 | Raw: 277 | Peak: 277[0m
+[0;32mI (326580) final_project: Hit #2 | Raw: 275 | Peak: 277[0m
+[0;32mI (735850) final_project: Hit #3 | Raw: 275 | Peak: 277[0m
+[0;32mI (735930) final_project: Hit #4 | Raw: 335 | Peak: 335[0m
+[0;32mI (736040) final_project: Hit #5 | Raw: 686 | Peak: 686[0m
+[0;32mI (946610) final_project: Hit #6 | Raw: 274 | Peak: 686[0m
+[0;32mI (1262000) final_project: Hit #7 | Raw: 279 | Peak: 686[0m
+[0;32mI (1262200) final_project: Hit #8 | Raw: 276 | Peak: 686[0m
+[0;32mI (1262600) final_project: Hit #9 | Raw: 278 | Peak: 686[0m
+[0;32mI (1262800) final_project: Hit #10 | Raw: 277 | Peak: 686[0m
+[0;32mI (1263000) final_project: Hit #11 | Raw: 272 | Peak: 686[0m
+[0;32mI (1263170) final_project: Hit #12 | Raw: 276 | Peak: 686[0m
+[0;32mI (1263400) final_project: Hit #13 | Raw: 274 | Peak: 686[0m
+[0;32mI (1263600) final_project: Hit #14 | Raw: 292 | Peak: 686[0m
+[0;32mI (1263770) final_project: Hit #15 | Raw: 277 | Peak: 686[0m
+[0;32mI (1271600) final_project: Hit #16 | Raw: 271 | Peak: 686[0m
+[0;32mI (1273690) final_project: Hit #17 | Raw: 276 | Peak: 686[0m
+[0;32mI (1278740) final_project: Hit #18 | Raw: 517 | Peak: 686[0m
+[0;32mI (1278800) final_project: Hit #19 | Raw: 519 | Peak: 686[0m
+[0;32mI (1278860) final_project: Hit #20 | Raw: 1059 | Peak: 1163[0m
+[0;32mI (1278920) final_project: Hit #21 | Raw: 967 | Peak: 1170[0m
+[0;32mI (1278980) final_project: Hit #22 | Raw: 615 | Peak: 1170[0m
+[0;32mI (1279040) final_project: Hit #23 | Raw: 683 | Peak: 1170[0m
+[0;32mI (1279100) final_project: Hit #24 | Raw: 711 | Peak: 1170[0m
+[0;32mI (1279160) final_project: Hit #25 | Raw: 599 | Peak: 1170[0m
+[0;32mI (1279220) final_project: Hit #26 | Raw: 1017 | Peak: 1170[0m
+[0;32mI (1279280) final_project: Hit #27 | Raw: 816 | Peak: 1170[0m
+[0;32mI (1279340) final_project: Hit #28 | Raw: 1033 | Peak: 1170[0m
+[0;32mI (1279400) final_project: Hit #29 | Raw: 967 | Peak: 1170[0m
+[0;32mI (1279460) final_project: Hit #30 | Raw: 831 | Peak: 1170[0m
+[0;32mI (1279520) final_project: Hit #31 | Raw: 936 | Peak: 1170[0m
+[0;32mI (1279580) final_project: Hit #32 | Raw: 712 | Peak: 1170[0m
+[0;32mI (1279640) final_project: Hit #33 | Raw: 693 | Peak: 1170[0m
+[0;32mI (1279700) final_project: Hit #34 | Raw: 731 | Peak: 1170[0m
+[0;32mI (1279760) final_project: Hit #35 | Raw: 734 | Peak: 1170[0m
+[0;32mI (1279820) final_project: Hit #36 | Raw: 986 | Peak: 1170[0m
+[0;32mI (1279880) final_project: Hit #37 | Raw: 1071 | Peak: 1170[0m
+[0;32mI (1279940) final_project: Hit #38 | Raw: 1332 | Peak: 1332[0m
+[0;32mI (1280000) final_project: Hit #39 | Raw: 1431 | Peak: 1485[0m
+[0;32mI (1280060) final_project: Hit #40 | Raw: 1449 | Peak: 1485[0m
+[0;32mI (1280120) final_project: Hit #41 | Raw: 1811 | Peak: 1811[0m
+[0;32mI (1280240) final_project: Hit #42 | Raw: 373 | Peak: 1811[0m
+[0;32mI (1322850) final_project: Hit #43 | Raw: 281 | Peak: 1811[0m
+[0;32mI (1323200) final_project: Hit #44 | Raw: 279 | Peak: 1811[0m

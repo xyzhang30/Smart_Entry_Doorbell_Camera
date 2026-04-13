@@ -1,0 +1,9 @@
+Command: /Users/annieyang/.espressif/python_env/idf5.5_py3.12_env/bin/python /Users/annieyang/esp/esp-idf/tools/idf_monitor.py -p /dev/cu.usbmodem1101 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /Users/annieyang/ECE-COMPSCI-655/final/build/final.elf /Users/annieyang/ECE-COMPSCI-655/final/build/bootloader/bootloader.elf -m '/Users/annieyang/.espressif/python_env/idf5.5_py3.12_env/bin/python' '/Users/annieyang/esp/esp-idf/tools/idf.py' '-p' '/dev/cu.usbmodem1101'
+[0;33m--- esp-idf-monitor 1.9.0 on /dev/cu.usbmodem1101 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+[0m--- 0x403828e7: [0;33mremove_free_block[0m[0m at [0;32m/Users/annieyang/esp/esp-idf/components/heap/tlsf/tlsf_control_functions.h[0m[0m:[1;31m370[0m
+[0m--- (inlined by) [0;33mblock_locate_free[0m[0m at [0;32m/Users/annieyang/esp/esp-idf/components/heap/tlsf/tlsf_control_functions.h[0m[0m:[1;31m619[0m
+[0m--- (inlined by) [0;33mtlsf_malloc[0m[0m at [0;32m/Users/annieyang/esp/esp-idf/components/heap/tlsf/tlsf.c[0m[0m:[1;31m444[0m
+[0m--- 0x403c8700: [0;33m_stext[0m[0m at [0;32m??[0m[0m:[1;31m?[0m
+[0m--- 0x403c8924: [0;33mcall_start_cpu0[0m[0m at [0;32m/Users/annieyang/esp/esp-idf/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m25[0m
+[0m
