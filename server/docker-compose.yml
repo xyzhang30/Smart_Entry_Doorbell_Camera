@@ -28,8 +28,8 @@ services:
       db:
         condition: service_healthy
     environment:
-      - POSTGRES_USER=test_user
-      - POSTGRES_PASSWORD=notarealpassword
+      - POSTGRES_USER=iot_user
+      - POSTGRES_PASSWORD=testpw
       - POSTGRES_DB=development
       - POSTGRES_HOST=db
 
@@ -39,13 +39,12 @@ services:
     shm_size: 128mb
     container_name: doorbellcam_db
     environment:
-      POSTGRES_USER: 655_user
-      POSTGRES_PASSWORD: zxy123456
+      POSTGRES_USER: iot_user
+      POSTGRES_PASSWORD: testpw
       POSTGRES_DB: development
       PGDATA: /var/lib/postgresql/data/pgdata
     healthcheck:
-      healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U test_user -d development"]
+      test: ["CMD-SHELL", "pg_isready -U iot_user -d development"]
       interval: 10s
       timeout: 5s
       retries: 5

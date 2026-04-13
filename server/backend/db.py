@@ -7,7 +7,7 @@ class Base(DeclarativeBase):
     pass
 
 db = SQLAlchemy(model_class=Base)
-
+db_session = db.session
 # def init_db(app):
 #     with app.app_context():
 #         # Import models here so SQLAlchemy "sees" them before create_all
