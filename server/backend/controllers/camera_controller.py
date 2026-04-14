@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_from_directory
 from ..models.camera import Camera
 import os
 from datetime import datetime
@@ -57,7 +57,15 @@ def get_logs():
     for log in logs:
         output.append({
             "id": log.id,
-            "image": log.image,
+            "image": log.image,  # Return the full path
             "timestamp": log.timestamp.isoformat() # Convert datetime to string
         })
     return jsonify(output)
+
+
+@bp.route('/images/<filename>')
+def get_image(filename):
+    '''
+    serve image files from the captures directory
+    '''
+    return send_from_directory(IMAGE_STORE_BASE_PATH, filename)

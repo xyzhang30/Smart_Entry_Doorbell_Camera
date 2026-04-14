@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.camera-logs-container {
+  padding: 48px 24px 80px;
+  max-width: 640px;
+  margin: 0 auto;
+  font-family: 'DM Sans', sans-serif;
+  color: #1a1a1a;
+}
+
+.camera-logs-container h1 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 40px;
+  color: #1a1a1a;
+}
+
+.camera-logs-loading,
+.camera-logs-empty {
+  color: #aaa;
+  font-size: 14px;
+  padding: 40px 0;
+}
+
+.camera-logs-error {
+  font-size: 14px;
+  color: #c0392b;
+  background: #fdf0ee;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+/* Timeline */
+.camera-logs-timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.camera-logs-timeline::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: #e4e1dc;
+}
+
+/* Entry */
+.camera-logs-entry {
+  position: relative;
+  margin-bottom: 36px;
+}
+
+.camera-logs-entry::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #d0ccc6;
+  transition: border-color 0.15s;
+}
+
+.camera-logs-entry:hover::before {
+  border-color: #999;
+}
+
+.camera-logs-timestamp {
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  color: #282724;
+  margin-bottom: 10px;
+  letter-spacing: 0.01em;
+}
+
+.camera-logs-image-container {
+  display: block;
+}
+
+.camera-logs-image {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #eae7e2;
+  transition: border-color 0.15s;
+}
+
+.camera-logs-entry:hover .camera-logs-image {
+  border-color: #ccc;
+}
