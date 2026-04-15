@@ -18,7 +18,7 @@ def add_user():
     '''
     image_bytes = request.data
     timestamp = request.headers.get("X-Timestamp")
-    
+
     if not image_bytes:
         return jsonify({"msg": "No image data received"}), 400
 
@@ -28,7 +28,7 @@ def add_user():
 
     if not os.path.exists(IMAGE_STORE_BASE_PATH):
         os.mkdir(IMAGE_STORE_BASE_PATH)
-    
+
     fname = f"event_{timestamp}.jpg"
     fpath = os.path.join(IMAGE_STORE_BASE_PATH, fname)
 
@@ -37,7 +37,7 @@ def add_user():
             f.write(image_bytes)
     except Exception as e:
         return jsonify({"msg": "File system error", "error": str(e)}), 500
-    
+
     try:
         new_log = Camera(image=fpath, timestamp=dt_object)
         new_log.save()

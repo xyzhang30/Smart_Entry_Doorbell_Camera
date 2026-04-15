@@ -6,11 +6,11 @@ function CameraLogsPage() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const baseUrl = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
     async function fetchLogs() {
       try {
-        const baseUrl = "http://localhost:8080";
         const response = await axios.get(`${baseUrl}/camera/get_logs`);
         const sortedLogs = response.data.sort(
           (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
@@ -47,7 +47,7 @@ function CameraLogsPage() {
                   </div>
                   <div className="camera-logs-image-container">
                     <img
-                      src={`http://localhost:8080/camera/images/${log.image.split('/').pop()}`}
+                      src={`${baseUrl}/camera/images/${log.image.split('/').pop()}`}
                       alt={`Camera capture ${log.id}`}
                       className="camera-logs-image"
                     />
