@@ -11,8 +11,6 @@
 #include "freertos/task.h"
 #include "lvgl.h" // LVGL graphics library
 #include "pin_config.h"
-#include "esp_adc/adc_oneshot.h"
-
 #include "esp32s3_box_lcd_config.h"
 
 static const char *TAG = "final_project";
@@ -21,9 +19,6 @@ static lv_disp_t *disp;
 #define PIEZO_DEBOUNCE_MS   200
 int raw = 0;
 int hit_count = 0;
-int peak_value = 0;
-
-adc_oneshot_unit_handle_t adc1_handle;
 
 // GUI setup function
 static lv_disp_t *gui_setup(void) {
@@ -104,36 +99,6 @@ static lv_disp_t *gui_setup(void) {
   return disp;
 }
 
-static void init_adc() {
-        // 1. Initialize the ADC Unit Handle
-    adc_oneshot_unit_init_cfg_t init_config = {
-        .unit_id = ADC_UNIT_1,
-    };
-    ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config, &adc1_handle));
-
-    // 2. Configure the Channel (attached to the handle)
-    adc_oneshot_chan_cfg_t config = {
-        .bitwidth = ADC_BITWIDTH_12, // Input voltage divided into 2**12 discrete levels
-        .atten = ADC_ATTEN_DB_12, // Controls the input voltage range that maps to the ADC's full-scale output (0 mv to 4400 mv)
-    };
-    ESP_ERROR_CHECK(adc_oneshot_config_channel(adc1_handle, ADC_CHANNEL_9, &config));
-
-    // 3. Read using the handle
-    adc_oneshot_read(adc1_handle, ADC_CHANNEL_9, &raw);
-    printf("New Raw: %d\n", raw);
-}
-
-// static void IRAM_ATTR button_isr(void *arg){
-//   int64_t now = esp_timer_get_time();
-//   bool button_on = gpio_get_level(BUTTON);
-//   if (now - last_isr_us < 50000) {
-//     return;
-//   }
-//   last_isr_us = now;
-//   gpio_set_level(BUZZER, button_on);
-  
-// }
-
 void app_main(void) {
     init_adc();
     gpio_config_t io_conf = {
@@ -146,40 +111,24 @@ void app_main(void) {
     lv_obj_t *scr = lv_disp_get_scr_act(disp);
     lv_obj_clean(scr);
 
-    // --- UI elements ---
-    // Raw ADC value
-    lv_obj_t *label_raw = lv_label_create(scr);
-    lv_obj_align(label_raw, LV_ALIGN_TOP_MID, 0, 20);
-
-    // Peak value since last reset
-    lv_obj_t *label_peak = lv_label_create(scr);
-    lv_obj_align(label_peak, LV_ALIGN_TOP_MID, 0, 60);
-
     // Hit counter
     lv_obj_t *label_hits = lv_label_create(scr);
-    lv_obj_align(label_hits, LV_ALIGN_TOP_MID, 0, 100);
+    lv_obj_align(label_hits, LV_ALIGN_TOP_MID, 0, 40);
 
     // Status indicator
     lv_obj_t *label_status = lv_label_create(scr);
-    lv_obj_align(label_status, LV_ALIGN_TOP_MID, 0, 140);
+    lv_obj_align(label_status, LV_ALIGN_TOP_MID, 0, 100);
     lv_label_set_text(label_status, "Status: Idle");
 
     char buf[128];
     bool in_hit = false;
     TickType_t last_hit_tick = 0;
     while (1) {
-        // adc_oneshot_read(adc1_handle, ADC_CHANNEL_9, &raw);
-
         TickType_t now = xTaskGetTickCount();
         bool hit_detected = false;
         raw = gpio_get_level(PZ);
         // if (raw > 250) {
         if (gpio_get_level(PZ)){
-            // Track the peak during a hit window
-            if (raw > peak_value) {
-                peak_value = raw;
-            }
-
             // Only count as a new hit if outside debounce window
             if (!in_hit || (now - last_hit_tick) > pdMS_TO_TICKS(PIEZO_DEBOUNCE_MS)) {
                 hit_count++;
@@ -187,7 +136,7 @@ void app_main(void) {
                 in_hit = true;
                 last_hit_tick = now;
                 
-                ESP_LOGI(TAG, "Hit #%d | Raw: %d | Peak: %d", hit_count, raw, peak_value);
+                ESP_LOGI(TAG, "Hit #%d | Raw: %d", hit_count, raw);
             }
         } else {
             // Reset in_hit once signal drops back below threshold
@@ -197,10 +146,6 @@ void app_main(void) {
         }
 
         lvgl_port_lock(0);
-        snprintf(buf, sizeof(buf), "Raw: %4d", raw);
-        lv_label_set_text(label_raw, buf);
-        snprintf(buf, sizeof(buf), "Peak:    %4d", peak_value);
-        lv_label_set_text(label_peak, buf);
         snprintf(buf, sizeof(buf), "Hits:    %d", hit_count);
         lv_label_set_text(label_hits, buf);
         lv_label_set_text(label_status, hit_detected ? "Status: HIT!" : "Status: Idle");
