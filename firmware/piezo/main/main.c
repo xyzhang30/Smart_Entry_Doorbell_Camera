@@ -127,7 +127,6 @@ void app_main(void) {
         TickType_t now = xTaskGetTickCount();
         bool hit_detected = false;
         raw = gpio_get_level(PZ);
-        // if (raw > 250) {
         if (gpio_get_level(PZ)){
             // Only count as a new hit if outside debounce window
             if (!in_hit || (now - last_hit_tick) > pdMS_TO_TICKS(PIEZO_DEBOUNCE_MS)) {
