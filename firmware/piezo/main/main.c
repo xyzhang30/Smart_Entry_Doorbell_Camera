@@ -4,7 +4,7 @@
 #include "driver/ledc.h"
 #include "driver/spi_master.h"
 #include "esp_err.h"
-#include "esp_lcd_panel_io.h"a
+#include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_log.h"
 #include "esp_lvgl_port.h"

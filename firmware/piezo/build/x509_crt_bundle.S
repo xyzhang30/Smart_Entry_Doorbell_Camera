@@ -1,4 +1,4 @@
-/* * Data converted from C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from /Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 #if !defined (__APPLE__) && !defined (__linux__)

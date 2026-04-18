@@ -1,13 +1,13 @@
 # Target labels
  bootloader
 # Source files and their labels
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/CMakeFiles/bootloader
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/CMakeFiles/bootloader.rule
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/CMakeFiles/bootloader-complete.rule
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
-C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/CMakeFiles/bootloader
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/CMakeFiles/bootloader.rule
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/CMakeFiles/bootloader-complete.rule
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

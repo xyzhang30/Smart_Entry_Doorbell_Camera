@@ -1,2 +1,2 @@
-source C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader/gdbinit/symbols
-source C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader/gdbinit/connect
+source /Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader/gdbinit/symbols
+source /Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader/gdbinit/connect
