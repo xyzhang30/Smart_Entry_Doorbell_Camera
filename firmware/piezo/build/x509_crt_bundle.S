@@ -1,4 +1,4 @@
-/* * Data converted from C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 #if !defined (__APPLE__) && !defined (__linux__)

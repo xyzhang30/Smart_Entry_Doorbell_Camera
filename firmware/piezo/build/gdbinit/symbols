@@ -13,8 +13,8 @@ end
 
 # Load bootloader symbols
 set confirm off
-    add-symbol-file C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/bootloader/bootloader.elf
+    add-symbol-file C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader/bootloader.elf
 set confirm on
 
 # Load application symbols
-file C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/main.elf
+file C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/main.elf

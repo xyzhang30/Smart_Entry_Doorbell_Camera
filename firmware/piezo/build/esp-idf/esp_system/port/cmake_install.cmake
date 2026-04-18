@@ -1,4 +1,4 @@
-# Install script for directory: C:/Espressif/frameworks/esp-idf-v5.5.2/components/esp_system/port
+# Install script for directory: C:/Espressif/frameworks/esp-idf-v5.5.2-2/components/esp_system/port
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,6 +39,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/esp-idf/esp_system/port/soc/esp32s3/cmake_install.cmake")
+  include("C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/esp-idf/esp_system/port/soc/esp32s3/cmake_install.cmake")
 endif()
 

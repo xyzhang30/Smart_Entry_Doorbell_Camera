@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3
+# Install script for directory: C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/esp-idf/cmake_install.cmake")
+  include("C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/esp-idf/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -57,6 +57,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/main
+# Install script for directory: C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

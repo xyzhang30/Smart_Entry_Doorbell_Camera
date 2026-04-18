@@ -6,22 +6,22 @@ cmake_minimum_required(VERSION 3.5)
 # If CMAKE_DISABLE_SOURCE_CHANGES is set to true and the source directory is an
 # existing directory in our source tree, calling file(MAKE_DIRECTORY) on it
 # would cause a fatal error, even though it would be a no-op.
-if(NOT EXISTS "C:/Espressif/frameworks/esp-idf-v5.5.2/components/bootloader/subproject")
-  file(MAKE_DIRECTORY "C:/Espressif/frameworks/esp-idf-v5.5.2/components/bootloader/subproject")
+if(NOT EXISTS "C:/Espressif/frameworks/esp-idf-v5.5.2-2/components/bootloader/subproject")
+  file(MAKE_DIRECTORY "C:/Espressif/frameworks/esp-idf-v5.5.2-2/components/bootloader/subproject")
 endif()
 file(MAKE_DIRECTORY
-  "C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/bootloader"
-  "C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/bootloader-prefix"
-  "C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/bootloader-prefix/tmp"
-  "C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/bootloader-prefix/src/bootloader-stamp"
-  "C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/bootloader-prefix/src"
-  "C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader"
+  "C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix"
+  "C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/tmp"
+  "C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src"
+  "C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Users/alish/Desktop/ECE-COMPSCI-655/lab2_task3/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Users/Owner/Smart_Entry_Doorbell_Camera/firmware/piezo/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()
