@@ -38,7 +38,9 @@ function FacesPage() {
     formData.append('name', name.trim());
     formData.append('image', imageFile);
     try {
-      const res = await axios.post(`${baseUrl}/face/add_person`, formData);
+      const res = await axios.post(`${baseUrl}/face/add_person`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       setFeedback({ type: 'success', msg: res.data.msg });
       setName('');
       setImageFile(null);
