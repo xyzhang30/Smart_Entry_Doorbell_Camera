@@ -2,6 +2,3 @@ flask
 flask-sqlalchemy
 psycopg2-binary
 flask-cors
-face_recognition
-numpy
-Pillow
