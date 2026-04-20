@@ -76,54 +76,12 @@
   border-color: #999;
 }
 
-.camera-logs-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
 .camera-logs-timestamp {
   font-family: 'DM Mono', monospace;
   font-size: 16px;
   color: #282724;
+  margin-bottom: 10px;
   letter-spacing: 0.01em;
-}
-
-/* Recognition Badge */
-.recognition-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-}
-
-.recognition-badge.unknown {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
-}
-
-.badge-label {
-  font-weight: 600;
-}
-
-.badge-name {
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-.badge-confidence {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  opacity: 0.9;
 }
 
 .camera-logs-image-container {
