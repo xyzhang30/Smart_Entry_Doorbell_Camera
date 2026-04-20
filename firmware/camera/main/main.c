@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
@@ -11,7 +12,10 @@
 #include "esp_event.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
+#include "mdns.h"
  
+#include "esp_http_client.h"
+
 // ----------------------------------------------------------------
 // TAG for log messages
 // ----------------------------------------------------------------
@@ -49,7 +53,11 @@ static int s_retry_num = 0;
 #define CAM_PIN_VSYNC   25
 #define CAM_PIN_HREF    23
 #define CAM_PIN_PCLK    22
- 
+
+#define MAX_HTTP_OUTPUT_BUFFER 1024
+
+char *TARGT_HOST_URL = "http://api.open-meteo.com/v1/forecast?latitude=36.00&longitude=-78.93&current=temperature_2m,relative_humidity_2m,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=ms";
+
 // ----------------------------------------------------------------
 // Camera config
 // Dropped to QVGA for reliability on first run — easy to increase later
@@ -231,6 +239,162 @@ void wifi_init(void)
         ESP_LOGE(TAG, "Failed to connect to %s", WIFI_SSID);
     }
 }
+
+// ----------------------------------------------------------------
+// mDNS setup - allows camera to be accessed as doorbell.local
+// ----------------------------------------------------------------
+void mdns_init_service(void)
+{
+    ESP_ERROR_CHECK(mdns_init());
+    ESP_ERROR_CHECK(mdns_hostname_set("doorbell"));
+    ESP_ERROR_CHECK(mdns_instance_name_set("Smart Doorbell Camera"));
+    
+    // Advertise HTTP service
+    ESP_ERROR_CHECK(mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0));
+    
+    ESP_LOGI(TAG, "mDNS configured: doorbell.local");
+}
+
+// ----------------------------------------------------------------
+// Flask Server Configuration
+// ----------------------------------------------------------------
+#define FLASK_SERVER_IP     "67.159.65.184"
+#define FLASK_SERVER_PORT   80
+#define FLASK_ENDPOINT      "/api/camera/append_logentry"
+
+typedef struct {
+    uint8_t *buf;
+    size_t len;
+} http_response_t;
+
+// HTTP event handler for Flask POST
+static esp_err_t flask_http_event_handler(esp_http_client_event_t *evt)
+{
+    http_response_t *resp = (http_response_t *)evt->user_data;
+    
+    switch (evt->event_id) {
+        case HTTP_EVENT_ERROR:
+            ESP_LOGE(TAG, "HTTP Client Error");
+            break;
+        case HTTP_EVENT_ON_CONNECTED:
+            ESP_LOGI(TAG, "HTTP Connected to Flask");
+            break;
+        case HTTP_EVENT_ON_DATA:
+            if (!esp_http_client_is_chunked_response(evt->client)) {
+                if (resp->buf == NULL) {
+                    resp->buf = (uint8_t *)malloc(evt->data_len + 1);
+                    resp->len = 0;
+                }
+                if (resp->buf && resp->len + evt->data_len <= 1024) {
+                    memcpy(resp->buf + resp->len, evt->data, evt->data_len);
+                    resp->len += evt->data_len;
+                }
+            }
+            break;
+        case HTTP_EVENT_ON_FINISH:
+            if (resp->buf) {
+                resp->buf[resp->len] = '\0';
+                ESP_LOGI(TAG, "Flask Response: %s", (char *)resp->buf);
+            }
+            break;
+        case HTTP_EVENT_DISCONNECTED:
+            if (resp->buf) {
+                free(resp->buf);
+                resp->buf = NULL;
+                resp->len = 0;
+            }
+            break;
+        default:
+            break;
+    }
+    return ESP_OK;
+}
+
+// Capture and send image to Flask server
+void capture_and_send_to_flask(void)
+{
+    camera_fb_t *fb = NULL;
+    time_t now = time(NULL);
+    char timestamp_str[32];
+    char flask_url[256];
+    
+    snprintf(timestamp_str, sizeof(timestamp_str), "%ld", now);
+    snprintf(flask_url, sizeof(flask_url), "http://%s:%d%s", FLASK_SERVER_IP, FLASK_SERVER_PORT, FLASK_ENDPOINT);
+    
+    ESP_LOGI(TAG, "Capturing image for Flask...");
+    fb = esp_camera_fb_get();
+    if (!fb) {
+        ESP_LOGE(TAG, "Camera capture failed");
+        return;
+    }
+    
+    ESP_LOGI(TAG, "Captured: %uKB | Timestamp: %s", fb->len / 1024, timestamp_str);
+    
+    esp_http_client_config_t config = {
+        .url = flask_url,
+        .method = HTTP_POST,
+        .timeout_ms = 10000,
+        .event_handler = flask_http_event_handler,
+    };
+    
+    http_response_t resp = {0};
+    config.user_data = &resp;
+    
+    esp_http_client_handle_t client = esp_http_client_init(&config);
+    if (!client) {
+        ESP_LOGE(TAG, "Failed to init HTTP client for Flask");
+        esp_camera_fb_return(fb);
+        return;
+    }
+    
+    // Set headers
+    esp_http_client_set_header(client, "X-Timestamp", timestamp_str);
+    esp_http_client_set_header(client, "Content-Type", "image/jpeg");
+    
+    // Send raw JPEG data
+    esp_http_client_set_post_field(client, (char *)fb->buf, fb->len);
+    
+    ESP_LOGI(TAG, "POSTing image to Flask...");
+    esp_err_t err = esp_http_client_perform(client);
+    
+    if (err == ESP_OK) {
+        int status_code = esp_http_client_get_status_code(client);
+        ESP_LOGI(TAG, "Flask HTTP Status: %d", status_code);
+        if (status_code == 201 || status_code == 200) {
+            ESP_LOGI(TAG, "Image successfully sent to Flask!");
+        } else {
+            ESP_LOGW(TAG, "Flask returned status: %d", status_code);
+        }
+    } else {
+        ESP_LOGE(TAG, "Flask POST failed: %s", esp_err_to_name(err));
+    }
+    
+    esp_http_client_cleanup(client);
+    esp_camera_fb_return(fb);
+}
+
+// ----------------------------------------------------------------
+// HTTP handler for /trigger_capture endpoint
+// ----------------------------------------------------------------
+esp_err_t trigger_capture_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "Trigger capture received!");
+    
+    // Capture and send to Flask in a separate task to not block HTTP server
+    xTaskCreate(
+        (TaskFunction_t)capture_and_send_to_flask,
+        "capture_task",
+        4096,
+        NULL,
+        5,
+        NULL
+    );
+    
+    // Respond immediately
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, "{\"status\": \"capture triggered\"}", -1);
+    return ESP_OK;
+}
  
 // ----------------------------------------------------------------
 // app_main
@@ -254,12 +418,16 @@ void app_main(void)
     // Connect to WiFi
     wifi_init();
  
+    // Init mDNS — makes camera accessible as doorbell.local
+    mdns_init_service();
+ 
     // Start HTTP server
     httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = 80;
  
     if (httpd_start(&server, &config) == ESP_OK) {
+        // Register /capture endpoint
         httpd_uri_t capture_uri = {
             .uri     = "/capture",
             .method  = HTTP_GET,
@@ -267,7 +435,19 @@ void app_main(void)
             .user_ctx = NULL
         };
         httpd_register_uri_handler(server, &capture_uri);
+        
+        // Register /trigger_capture endpoint (called by piezo device)
+        httpd_uri_t trigger_uri = {
+            .uri     = "/trigger_capture",
+            .method  = HTTP_POST,
+            .handler = trigger_capture_handler,
+            .user_ctx = NULL
+        };
+        httpd_register_uri_handler(server, &trigger_uri);
+        
         ESP_LOGI(TAG, "HTTP server started on port 80");
+        ESP_LOGI(TAG, "  - GET /capture for live stream");
+        ESP_LOGI(TAG, "  - POST /trigger_capture to capture & send to Flask");
     } else {
         ESP_LOGE(TAG, "Failed to start HTTP server");
     }
