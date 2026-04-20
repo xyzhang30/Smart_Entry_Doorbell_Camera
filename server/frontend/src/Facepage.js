@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
-import './FacesPage.css';
+import './Facepage.css';
 
 function FacesPage() {
   const [persons, setPersons] = useState([]);
@@ -13,7 +13,7 @@ function FacesPage() {
   const fileInputRef = useRef(null);
   const baseUrl = process.env.REACT_APP_BASE_URL;
 
-  async function fetchPersons() {
+  const fetchPersons = useCallback(async () => {
     try {
       const res = await axios.get(`${baseUrl}/face/persons`);
       setPersons(res.data);
@@ -22,9 +22,9 @@ function FacesPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [baseUrl]);
 
-  useEffect(() => { fetchPersons(); }, []);
+  useEffect(() => { fetchPersons(); }, [fetchPersons]);
 
   async function handleSubmit(e) {
     e.preventDefault();
