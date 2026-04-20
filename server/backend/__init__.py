@@ -20,9 +20,10 @@ def create_app():
     db.init_app(app)
 
     # Register Blueprints
-    from .controllers import user_controller, camera_controller
+    from .controllers import user_controller, camera_controller, face_controller
     app.register_blueprint(user_controller.bp)
     app.register_blueprint(camera_controller.bp)
+    app.register_blueprint(face_controller.bp)
 
     # Create tables
     init_db(app)
