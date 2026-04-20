@@ -56,8 +56,6 @@ static int s_retry_num = 0;
 
 #define MAX_HTTP_OUTPUT_BUFFER 1024
 
-char *TARGT_HOST_URL = "http://api.open-meteo.com/v1/forecast?latitude=36.00&longitude=-78.93&current=temperature_2m,relative_humidity_2m,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=ms";
-
 // ----------------------------------------------------------------
 // Camera config
 // Dropped to QVGA for reliability on first run — easy to increase later

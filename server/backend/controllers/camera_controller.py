@@ -9,7 +9,7 @@ bp = Blueprint('camera', __name__, url_prefix = '/camera')
 IMAGE_STORE_BASE_PATH = "/srv/app/captures"
 
 
-@bp.route('/append_logentry', methods=['POST'])
+@bp.route('/append_logentry', methods=['POST', 'PATCH'])
 def add_user():
     '''
     gets a new image (in raw binary) and timestamp from the ESP32
