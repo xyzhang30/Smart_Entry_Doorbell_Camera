@@ -13,6 +13,7 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 #include "mdns.h"
+#include "esp_sntp.h"
  
 #include "esp_http_client.h"
 
@@ -449,9 +450,9 @@ void app_main(void)
     wifi_init();
 
     // Sync time via SNTP
-    sntp_setoperatingmode(SNTP_OPMODE_POLL);
-    sntp_setservername(0, "pool.ntp.org");
-    sntp_init();
+    esp_sntp_setoperatingmode(SNTP_OPMODE_POLL);
+    esp_sntp_setservername(0, "pool.ntp.org");
+    esp_sntp_init();
 
     // Wait for sync (up to 10s)
     time_t now = 0;
