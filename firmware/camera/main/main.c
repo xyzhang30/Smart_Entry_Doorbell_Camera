@@ -482,7 +482,7 @@ void app_main(void)
         // Register /trigger_capture endpoint (called by piezo device)
         httpd_uri_t trigger_uri = {
             .uri     = "/trigger_capture",
-            .method  = HTTP_POST,
+            .method  = HTTP_ANY,
             .handler = trigger_capture_handler,
             .user_ctx = NULL
         };
