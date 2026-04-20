@@ -19,6 +19,7 @@
 #include "esp_http_client.h"
 #include "nvs_flash.h"
 
+
 static const char *TAG = "final_project";
 static lv_disp_t *disp;
 
@@ -36,7 +37,7 @@ static lv_disp_t *disp;
 #define WIFI_MAX_RETRY      5
 
 // --- Camera device config ---
-#define CAMERA_DEVICE_HOSTNAME  "doorbell.local"
+#define CAMERA_DEVICE_HOSTNAME  "172.28.134.154"
 #define CAMERA_DEVICE_PORT      80
 #define CAMERA_TRIGGER_URI      "/trigger_capture"
 

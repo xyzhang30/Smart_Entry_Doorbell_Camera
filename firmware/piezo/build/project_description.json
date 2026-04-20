@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "main",
-    "project_version":    "f1511eb4-dirty",
+    "project_version":    "cf58c3f5-dirty",
     "project_path":       "/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo",
     "idf_path":           "/Users/annieyang/esp/esp-idf",
     "build_dir":          "/Users/annieyang/Smart_Entry_Doorbell_Camera/firmware/piezo/build",
