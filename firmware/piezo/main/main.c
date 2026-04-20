@@ -29,7 +29,7 @@ static lv_disp_t *disp;
 // --- Motor config ---
 #define MOTOR_PWM_PIN       11
 #define MOTOR_DIR_PIN       12
-#define MOTOR_RUN_MS        3000    // how long motor runs after a hit
+#define MOTOR_RUN_MS        1500    // how long motor runs after a hit
 
 // --- WiFi config ---
 #define WIFI_SSID           "DukeVisitor"
@@ -109,7 +109,7 @@ static void motor_task(void *pvParameters)
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         ESP_LOGI(TAG, "Motor ON");
-        motor_set(768, true);
+        motor_set(512, true);
         vTaskDelay(pdMS_TO_TICKS(MOTOR_RUN_MS));
         motor_stop();
         ESP_LOGI(TAG, "Motor OFF");
@@ -227,7 +227,7 @@ void trigger_camera_capture(void)
 
     esp_http_client_config_t config = {
         .url = camera_url,
-        .method = HTTP_POST,
+        .method = HTTP_METHOD_POST,
         .timeout_ms = 5000,
         .event_handler = camera_http_event_handler,
     };

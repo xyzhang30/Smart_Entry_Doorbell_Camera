@@ -318,7 +318,7 @@ void capture_and_send_to_flask(void)
     char timestamp_str[32];
     char flask_url[256];
     
-    snprintf(timestamp_str, sizeof(timestamp_str), "%ld", now);
+    snprintf(timestamp_str, sizeof(timestamp_str), "%lld", now);
     snprintf(flask_url, sizeof(flask_url), "http://%s:%d%s", FLASK_SERVER_IP, FLASK_SERVER_PORT, FLASK_ENDPOINT);
     
     ESP_LOGI(TAG, "Capturing image for Flask...");
