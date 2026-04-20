@@ -373,26 +373,56 @@ void capture_and_send_to_flask(void)
     esp_camera_fb_return(fb);
 }
 
+// Task wrapper for capture (FreeRTOS requires this signature)
+void capture_task(void *pvParameters)
+{
+    ESP_LOGI(TAG, "Capture task started");
+
+    capture_and_send_to_flask();
+
+    ESP_LOGI(TAG, "Capture task finished");
+
+    vTaskDelete(NULL);  // clean up task after running once
+}
+
 // ----------------------------------------------------------------
 // HTTP handler for /trigger_capture endpoint
 // ----------------------------------------------------------------
 esp_err_t trigger_capture_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "Trigger capture received!");
-    
-    // Capture and send to Flask in a separate task to not block HTTP server
-    xTaskCreate(
-        (TaskFunction_t)capture_and_send_to_flask,
+
+    // Optional: rate limiting (2 seconds)
+    static int64_t last_capture_time = 0;
+    int64_t now = esp_timer_get_time();
+
+    if (now - last_capture_time < 2000000) {
+        ESP_LOGW(TAG, "Ignoring trigger (too soon)");
+        httpd_resp_send(req, "{\"status\": \"ignored\"}", -1);
+        return ESP_OK;
+    }
+    last_capture_time = now;
+
+    // Create capture task
+    BaseType_t result = xTaskCreate(
+        capture_task,
         "capture_task",
-        4096,
+        8192,     // IMPORTANT: larger stack for camera + HTTP
         NULL,
         5,
         NULL
     );
-    
-    // Respond immediately
+
+    if (result != pdPASS) {
+        ESP_LOGE(TAG, "Failed to create capture task");
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    // Respond immediately (non-blocking)
     httpd_resp_set_type(req, "application/json");
     httpd_resp_send(req, "{\"status\": \"capture triggered\"}", -1);
+
     return ESP_OK;
 }
  
