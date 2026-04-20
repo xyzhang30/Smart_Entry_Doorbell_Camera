@@ -1,7 +1,7 @@
 import './App.css';
 import { useState } from 'react';
 import CameraLogsPage from './CameraLogsPage';
-import FacesPage from './FacesPage';
+import FacesPage from './Facepage';
 
 function App() {
   const [tab, setTab] = useState('logs');
