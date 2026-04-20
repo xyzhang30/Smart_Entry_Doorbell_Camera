@@ -312,11 +312,13 @@ static esp_err_t flask_http_event_handler(esp_http_client_event_t *evt)
 void capture_and_send_to_flask(void)
 {
     camera_fb_t *fb = NULL;
-    time_t now = time(NULL);
     char timestamp_str[32];
     char flask_url[256];
-    
-    snprintf(timestamp_str, sizeof(timestamp_str), "%lld", now);
+
+    // Get real wall-clock time (requires SNTP to have synced first)
+    time_t now = time(NULL);
+    snprintf(timestamp_str, sizeof(timestamp_str), "%ld", (long)now);
+
     snprintf(flask_url, sizeof(flask_url), "http://%s:%d%s", FLASK_SERVER_IP, FLASK_SERVER_PORT, FLASK_ENDPOINT);
     
     ESP_LOGI(TAG, "Capturing image for Flask...");
@@ -445,6 +447,19 @@ void app_main(void)
  
     // Connect to WiFi
     wifi_init();
+
+    // Sync time via SNTP
+    sntp_setoperatingmode(SNTP_OPMODE_POLL);
+    sntp_setservername(0, "pool.ntp.org");
+    sntp_init();
+
+    // Wait for sync (up to 10s)
+    time_t now = 0;
+    int retries = 0;
+    while (time(&now) < 1700000000 && retries++ < 20) {
+        vTaskDelay(500 / portTICK_PERIOD_MS);
+    }
+    ESP_LOGI(TAG, "Time synced: %ld", (long)now);
  
     // Init mDNS — makes camera accessible as doorbell.local
     mdns_init_service();
