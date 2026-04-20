@@ -42,24 +42,8 @@ function CameraLogsPage() {
             <div className="camera-logs-timeline">
               {logs.map((log) => (
                 <div key={log.id} className="camera-logs-entry">
-                  <div className="camera-logs-header">
-                    <div className="camera-logs-timestamp">
-                      {new Date(log.timestamp).toLocaleString()}
-                    </div>
-                    {log.recognized && (
-                      <div className="recognition-badge">
-                        <span className="badge-label">✓ Recognized</span>
-                        <span className="badge-name">{log.username}</span>
-                        <span className="badge-confidence">
-                          {(log.confidence * 100).toFixed(0)}%
-                        </span>
-                      </div>
-                    )}
-                    {log.recognized === null && (
-                      <div className="recognition-badge unknown">
-                        <span className="badge-label">? Unknown</span>
-                      </div>
-                    )}
+                  <div className="camera-logs-timestamp">
+                    {new Date(log.timestamp).toLocaleString()}
                   </div>
                   <div className="camera-logs-image-container">
                     <img
@@ -79,4 +63,3 @@ function CameraLogsPage() {
 }
 
 export default CameraLogsPage;
-
