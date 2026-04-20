@@ -36,3 +36,35 @@
     transform: rotate(360deg);
   }
 }
+
+/* ── Nav (new rules only) ── */
+.app-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #eae7e2;
+  padding: 0 24px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.app-nav-tab {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 14px 16px 12px;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+
+.app-nav-tab:hover {
+  color: #1a1a1a;
+}
+
+.app-nav-tab--active {
+  color: #1a1a1a;
+  border-bottom-color: #1a1a1a;
+}

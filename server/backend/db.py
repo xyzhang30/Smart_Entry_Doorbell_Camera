@@ -19,6 +19,7 @@ def init_db(app):
         # BEFORE calling create_all so SQLAlchemy "sees" it.
         from .models.user import User 
         from .models.camera import Camera
+        from .models.person import Person
         
         # Simple retry loop to handle the DB boot-up lag
         for i in range(10):
