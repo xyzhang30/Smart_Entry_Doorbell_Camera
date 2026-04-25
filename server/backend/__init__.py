@@ -22,6 +22,7 @@ def create_app():
 
     # Initialize the extension
     db.init_app(app)
+    migrate.init_app(app, db)
 
     # Register Blueprints
     from .controllers import user_controller, camera_controller, face_controller
