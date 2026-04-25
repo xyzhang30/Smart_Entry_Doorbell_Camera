@@ -4,3 +4,4 @@ psycopg2-binary
 flask-cors
 numpy
 face_recognition
+requests
