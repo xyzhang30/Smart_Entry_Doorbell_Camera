@@ -6,9 +6,6 @@ function CameraLogsPage() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // Map of log.id -> string[] of recognized names
-  const [recognitions, setRecognitions] = useState({});
-  const [recognizing, setRecognizing] = useState(false);
   const baseUrl = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
@@ -30,34 +27,9 @@ function CameraLogsPage() {
     fetchLogs();
   }, []);
 
-  async function handleRecognizeAll() {
-    setRecognizing(true);
-    try {
-      const res = await axios.post(`${baseUrl}/face/recognize_all`);
-      // results is { [log_id]: string[] }
-      setRecognitions(res.data.results || {});
-    } catch (err) {
-      const message = err.response?.data?.msg || 'Recognition failed.';
-      setError(message);
-    } finally {
-      setRecognizing(false);
-    }
-  }
-
   return (
     <div className="camera-logs-container">
-      <div className="camera-logs-header">
-        <h1>Camera Logs</h1>
-        {!loading && !error && logs.length > 0 && (
-          <button
-            className="camera-logs-recognize-btn"
-            onClick={handleRecognizeAll}
-            disabled={recognizing}
-          >
-            {recognizing ? 'Recognizing…' : 'Run recognition'}
-          </button>
-        )}
-      </div>
+      <h1>Camera Logs</h1>
 
       {loading && <p className="camera-logs-loading">Loading...</p>}
       {error && <p className="camera-logs-error">{error}</p>}
@@ -69,7 +41,7 @@ function CameraLogsPage() {
           ) : (
             <div className="camera-logs-timeline">
               {logs.map((log) => {
-                const names = recognitions[log.id];
+                const names = log.recognized_names || [];
                 return (
                   <div key={log.id} className="camera-logs-entry">
                     <div className="camera-logs-timestamp">
@@ -82,7 +54,7 @@ function CameraLogsPage() {
                         className="camera-logs-image"
                       />
                     </div>
-                    {names && names.length > 0 && (
+                    {names.length > 0 ? (
                       <div className="camera-logs-names">
                         {names.map((n, i) => (
                           <span
@@ -93,8 +65,7 @@ function CameraLogsPage() {
                           </span>
                         ))}
                       </div>
-                    )}
-                    {names && names.length === 0 && (
+                    ) : (
                       <div className="camera-logs-names">
                         <span className="camera-logs-name-badge camera-logs-name-badge--none">
                           No faces detected

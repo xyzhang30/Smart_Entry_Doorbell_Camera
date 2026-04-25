@@ -17,6 +17,7 @@
 #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_http_client.h"
+#include "esp_http_server.h"
 #include "nvs_flash.h"
 
 
@@ -106,7 +107,7 @@ static TaskHandle_t motor_task_handle = NULL;
 static void motor_task(void *pvParameters)
 {
     while (1) {
-        // Block here until piezo loop sends a notification
+        // Block here until HTTP handler sends a notification
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         ESP_LOGI(TAG, "Motor ON");
@@ -115,6 +116,45 @@ static void motor_task(void *pvParameters)
         motor_stop();
         ESP_LOGI(TAG, "Motor OFF");
     }
+}
+
+// ============================================================================
+// HTTP server — /trigger_motor endpoint (called by Flask after face recognition)
+// ============================================================================
+
+static esp_err_t trigger_motor_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "Received /trigger_motor request from Flask");
+
+    // Notify the motor task to run
+    xTaskNotifyGive(motor_task_handle);
+
+    const char *resp = "{\"status\": \"motor triggered\"}";
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_send(req, resp, HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
+
+static void start_http_server(void)
+{
+    httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    config.server_port = 80;
+
+    httpd_handle_t server = NULL;
+    if (httpd_start(&server, &config) != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to start HTTP server");
+        return;
+    }
+
+    httpd_uri_t trigger_motor_uri = {
+        .uri      = "/trigger_motor",
+        .method   = HTTP_POST,
+        .handler  = trigger_motor_handler,
+        .user_ctx = NULL,
+    };
+    httpd_register_uri_handler(server, &trigger_motor_uri);
+
+    ESP_LOGI(TAG, "HTTP server started, listening for /trigger_motor on port 80");
 }
 
 // ============================================================================
@@ -353,8 +393,11 @@ void app_main(void)
     motor_init();
     ESP_LOGI(TAG, "Motor initialized");
 
-    // Start motor task — it blocks until notified
+    // Start motor task — it blocks until notified by HTTP handler
     xTaskCreate(motor_task, "motor_task", 2048, NULL, 5, &motor_task_handle);
+
+    // Start HTTP server — Flask will POST to /trigger_motor after face recognition
+    start_http_server();
 
     // Init piezo pin
     gpio_config_t io_conf = {
@@ -400,10 +443,8 @@ void app_main(void)
 
                 ESP_LOGI(TAG, "Hit #%d | Raw: %d", hit_count, raw);
 
-                // --- Notify motor task to run ---
-                xTaskNotifyGive(motor_task_handle);
-
-                // --- Trigger camera capture ---
+                // --- Trigger camera capture only ---
+                // Motor will be triggered separately via POST /trigger_motor from Flask
                 lvgl_port_lock(0);
                 lv_label_set_text(label_camera, "Camera: Sending...");
                 lvgl_port_unlock();
