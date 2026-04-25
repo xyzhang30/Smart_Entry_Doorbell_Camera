@@ -2,6 +2,10 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from .db import db, init_db
+from flask_migrate import Migrate
+
+# Initialize Migrate outside of create_app
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
