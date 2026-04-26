@@ -2,6 +2,7 @@ import './App.css';
 import { useState } from 'react';
 import CameraLogsPage from './CameraLogsPage';
 import FacesPage from './Facepage';
+import StatsPage from './StatsPage';
 
 function App() {
   const [tab, setTab] = useState('logs');
@@ -16,6 +17,12 @@ function App() {
           Camera Logs
         </button>
         <button
+          className={`app-nav-tab ${tab === 'stats' ? 'app-nav-tab--active' : ''}`}
+          onClick={() => setTab('stats')}
+        >
+          Stats
+        </button>
+        <button
           className={`app-nav-tab ${tab === 'faces' ? 'app-nav-tab--active' : ''}`}
           onClick={() => setTab('faces')}
         >
@@ -23,7 +30,7 @@ function App() {
         </button>
       </nav>
 
-      {tab === 'logs' ? <CameraLogsPage /> : <FacesPage />}
+      {tab === 'logs' ? <CameraLogsPage /> : tab === 'stats' ? <StatsPage /> : <FacesPage />}
     </div>
   );
 }

@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap');
+
+.stats-container {
+  padding: 48px 24px 80px;
+  max-width: 720px;
+  margin: 0 auto;
+  font-family: 'DM Sans', sans-serif;
+  color: #1a1a1a;
+}
+
+.stats-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stats-header h1 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.stats-header p {
+  color: #666;
+  line-height: 1.6;
+  max-width: 520px;
+}
+
+.stats-refresh {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.stats-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.stats-error,
+.stats-loading,
+.stats-empty {
+  font-size: 14px;
+  color: #c0392b;
+  margin-top: 12px;
+}
+
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stats-card {
+  background: #f7f5f0;
+  border: 1px solid #e4e1dc;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.stats-card--secondary {
+  background: #fff;
+}
+
+.stats-card-label {
+  display: block;
+  color: #777;
+  font-size: 12px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.stats-card-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.stats-table-section h2 {
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #999;
+  margin-bottom: 16px;
+}
+
+.stats-table-wrapper {
+  overflow-x: auto;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #eae7e2;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.stats-table th,
+.stats-table td {
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 14px;
+}
+
+.stats-table th {
+  color: #555;
+  background: #faf7f2;
+  font-weight: 600;
+}
+
+.stats-table tr:not(:last-child) {
+  border-bottom: 1px solid #eae7e2;
+}
+
+.stats-loading {
+  color: #666;
+}
