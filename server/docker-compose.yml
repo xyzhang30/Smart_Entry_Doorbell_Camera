@@ -33,6 +33,7 @@ services:
       - POSTGRES_PASSWORD=testpw
       - POSTGRES_DB=development
       - POSTGRES_HOST=db
+      - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1497794753712885880/XxrK0S7rgA6IwJ1rsw-sElIpVKHEkuLh9sqAB3WABnk487mqCbbIbIWekyzu_YzaslkR
 
   db:
     image: postgres

@@ -20,7 +20,6 @@ IMAGE_STORE_BASE_PATH = "/srv/app/captures"
 # ESP32 motor trigger endpoint
 ESP32_MOTOR_URI = "http://172.28.149.127/trigger_motor"
 
-# Discord webhook URL — set this in your environment or replace directly
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", "")
 
 
