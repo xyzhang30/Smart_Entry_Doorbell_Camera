@@ -64,7 +64,16 @@ function StatsPage() {
       );
     }
 
-    return persons.map(person => (
+    const sortedPersons = [...persons].sort((a, b) => {
+      const countA = stats.registered[a.name] ?? 0;
+      const countB = stats.registered[b.name] ?? 0;
+      if (countA !== countB) {
+        return countB - countA;
+      }
+      return a.name.localeCompare(b.name);
+    });
+
+    return sortedPersons.map(person => (
       <tr key={person.id}>
         <td>{person.name}</td>
         <td>{stats.registered[person.name] ?? 0}</td>
