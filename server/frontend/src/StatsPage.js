@@ -72,6 +72,8 @@ function StatsPage() {
     ));
   };
 
+  const registeredSightings = Object.values(stats.registered).reduce((sum, value) => sum + value, 0);
+
   return (
     <div className="stats-container">
       <div className="stats-header">
@@ -92,8 +94,8 @@ function StatsPage() {
           <span className="stats-card-value">{stats.unregistered}</span>
         </div>
         <div className="stats-card stats-card--secondary">
-          <span className="stats-card-label">Registered persons</span>
-          <span className="stats-card-value">{persons.length}</span>
+          <span className="stats-card-label">Registered sightings</span>
+          <span className="stats-card-value">{registeredSightings}</span>
         </div>
       </div>
 
