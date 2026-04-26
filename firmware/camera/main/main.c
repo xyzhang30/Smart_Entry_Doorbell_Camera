@@ -318,7 +318,11 @@ void capture_and_send_to_flask(void)
 
     // Get real wall-clock time (requires SNTP to have synced first)
     time_t now = time(NULL);
-    snprintf(timestamp_str, sizeof(timestamp_str), "%ld", (long)now);
+    const int EST_OFFSET_SECONDS = -5 * 3600;
+    time_t est_seconds = now + EST_OFFSET_SECONDS;
+    struct tm est_tm;
+    gmtime_r(&est_seconds, &est_tm);
+    strftime(timestamp_str, sizeof(timestamp_str), "%Y-%m-%d_%H-%M-%S", &est_tm);
 
     snprintf(flask_url, sizeof(flask_url), "http://%s:%d%s", FLASK_SERVER_IP, FLASK_SERVER_PORT, FLASK_ENDPOINT);
     

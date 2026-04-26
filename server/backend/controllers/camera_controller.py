@@ -89,11 +89,20 @@ def add_user():
 
     est_tz = _est_timezone()
 
+    def _parse_timestamp(value):
+        if value.isdigit():
+            return datetime.fromtimestamp(float(value), tz=timezone.utc).astimezone(est_tz)
+        try:
+            dt_naive = datetime.strptime(value, "%Y-%m-%d_%H-%M-%S")
+            return dt_naive.replace(tzinfo=est_tz)
+        except ValueError:
+            return datetime.now(tz=est_tz)
+
     if not timestamp:
         dt_object = datetime.now(tz=est_tz)
         timestamp = dt_object.strftime("%Y-%m-%d_%H-%M-%S")
     else:
-        dt_object = datetime.fromtimestamp(float(timestamp), tz=timezone.utc).astimezone(est_tz)
+        dt_object = _parse_timestamp(timestamp)
 
     if not os.path.exists(IMAGE_STORE_BASE_PATH):
         os.mkdir(IMAGE_STORE_BASE_PATH)
