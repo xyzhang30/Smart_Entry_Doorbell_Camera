@@ -13,7 +13,7 @@ bp = Blueprint('camera', __name__, url_prefix='/camera')
 IMAGE_STORE_BASE_PATH = "/srv/app/captures"
 
 # ESP32 motor trigger endpoint
-ESP32_HOSTNAME = "172.28.134.154"
+ESP32_HOSTNAME = "172.28.149.127"
 ESP32_MOTOR_URI = f"http://{ESP32_HOSTNAME}/trigger_motor"
 
 
