@@ -6,7 +6,12 @@ import numpy as np
 import json
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+try:
+    from zoneinfo import ZoneInfo
+except ImportError:
+    ZoneInfo = None
 
 bp = Blueprint('camera', __name__, url_prefix='/camera')
 
@@ -77,9 +82,18 @@ def add_user():
     if not image_bytes:
         return jsonify({"msg": "No image data received"}), 400
 
+    def _est_timezone():
+        if ZoneInfo is not None:
+            return ZoneInfo('America/New_York')
+        return timezone(timedelta(hours=-5))
+
+    est_tz = _est_timezone()
+
     if not timestamp:
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    dt_object = datetime.fromtimestamp(float(timestamp))
+        dt_object = datetime.now(tz=est_tz)
+        timestamp = dt_object.strftime("%Y-%m-%d_%H-%M-%S")
+    else:
+        dt_object = datetime.fromtimestamp(float(timestamp), tz=timezone.utc).astimezone(est_tz)
 
     if not os.path.exists(IMAGE_STORE_BASE_PATH):
         os.mkdir(IMAGE_STORE_BASE_PATH)
