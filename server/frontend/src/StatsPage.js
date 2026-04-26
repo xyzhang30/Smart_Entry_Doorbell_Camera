@@ -25,20 +25,20 @@ function StatsPage() {
         return acc;
       }, {});
 
-      let unregisteredCount = 0;
       const logs = logsRes.data || [];
+      let totalRegisteredSeen = 0;
+
       logs.forEach(log => {
         const names = log.recognized_names || [];
         names.forEach(name => {
-          if (name === 'Unknown') {
-            unregisteredCount += 1;
-          } else if (Object.prototype.hasOwnProperty.call(counts, name)) {
+          if (name !== 'Unknown' && Object.prototype.hasOwnProperty.call(counts, name)) {
             counts[name] += 1;
-          } else {
-            unregisteredCount += 1;
+            totalRegisteredSeen += 1;
           }
         });
       });
+
+      const unregisteredCount = Math.max(0, logs.length - totalRegisteredSeen);
 
       setPersons(personsList);
       setStats({ registered: counts, unregistered: unregisteredCount });
