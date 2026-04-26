@@ -18,7 +18,10 @@ bp = Blueprint('camera', __name__, url_prefix='/camera')
 IMAGE_STORE_BASE_PATH = "/srv/app/captures"
 
 # ESP32 motor trigger endpoint
-ESP32_MOTOR_URI = f"http://172.28.149.127/trigger_motor"
+ESP32_MOTOR_URI = "http://172.28.149.127/trigger_motor"
+
+# Discord webhook URL — set this in your environment or replace directly
+DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", "")
 
 
 def _run_recognition(image_path):
@@ -54,8 +57,8 @@ def _run_recognition(image_path):
 
 
 def _trigger_motor(known_names=None):
-    """POST to the ESP32 motor endpoint with recognized person names.
-    Fire-and-forget; errors are logged but not raised.
+    """
+    POST to the ESP32 motor endpoint with recognized person names.
     """
     if not known_names:
         return
@@ -68,13 +71,75 @@ def _trigger_motor(known_names=None):
         print(f"[camera] Motor trigger failed: {e}")
 
 
+def _notify_discord(known_names, all_names, timestamp, image_path):
+    """
+    Send a Discord webhook notification when an entry is detected.
+    """
+    if not DISCORD_WEBHOOK_URL:
+        print("[camera] DISCORD_WEBHOOK_URL not set, skipping notification")
+        return
+
+    unknown_count = all_names.count("Unknown")
+    names_display = ", ".join(known_names) if known_names else "Nobody known"
+
+    # Build a description line summarising what was seen
+    parts = []
+    if known_names:
+        parts.append(f"**{names_display}**")
+    if unknown_count:
+        parts.append(f"{unknown_count} unknown face{'s' if unknown_count > 1 else ''}")
+    description = " + ".join(parts) + " detected at the door."
+
+    ts_formatted = timestamp.strftime("%Y-%m-%d %H:%M:%S %Z")
+    image_filename = os.path.basename(image_path)
+
+    embed = {
+        "title": "Entry detected",
+        "description": description,
+        "color": 0x2ECC71 if known_names else 0xE74C3C,  # green for known, red for unknown-only
+        "fields": [
+            {
+                "name": "Recognised",
+                "value": names_display,
+                "inline": True,
+            },
+            {
+                "name": "Time",
+                "value": ts_formatted,
+                "inline": True,
+            },
+            {
+                "name": "Image file",
+                "value": f"`{image_filename}`",
+                "inline": False,
+            },
+        ],
+        "footer": {"text": "Door camera system"},
+        "timestamp": timestamp.isoformat(),
+    }
+
+    payload = {"embeds": [embed]}
+
+    try:
+        resp = requests.post(
+            DISCORD_WEBHOOK_URL,
+            json=payload,
+            timeout=5,
+            headers={"Content-Type": "application/json"},
+        )
+        print(f"[camera] Discord notification sent: {resp.status_code}")
+    except Exception as e:
+        print(f"[camera] Discord notification failed: {e}")
+
+
 @bp.route('/append_logentry', methods=['POST', 'PATCH'])
 def add_user():
     '''
     Gets a new image (in raw binary) and timestamp from the ESP32.
     Expects 'X-Timestamp' header for metadata.
     Stores image on disk, runs face recognition immediately,
-    saves results to DB, and triggers the motor if a known face is found.
+    saves results to DB, triggers the motor, and sends a Discord
+    notification if any face (known or unknown) is detected.
     '''
     image_bytes = request.data
     timestamp = request.headers.get("X-Timestamp")
@@ -120,9 +185,14 @@ def add_user():
     found_names = _run_recognition(fpath)
     known_found = [n for n in found_names if n != "Unknown"]
 
-    # Trigger motor if at least one known face was recognized
+    # Trigger motor if at least one known face was recognised
     if known_found:
         _trigger_motor(known_found)
+
+    # Notify Discord whenever any face is detected
+    # Change `if found_names` to `if known_found` to only notify for known people
+    if found_names:
+        _notify_discord(known_found, found_names, dt_object, fpath)
 
     try:
         new_log = Camera(image=fpath, timestamp=dt_object)
