@@ -107,11 +107,6 @@ def _notify_discord(known_names, all_names, timestamp, image_path):
                 "value": ts_formatted,
                 "inline": True,
             },
-            {
-                "name": "Image file",
-                "value": f"`{image_filename}`",
-                "inline": False,
-            },
         ],
         "footer": {"text": "Door camera system"},
         "timestamp": timestamp.isoformat(),
