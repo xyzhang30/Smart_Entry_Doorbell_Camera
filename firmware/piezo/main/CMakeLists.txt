@@ -3,4 +3,5 @@ idf_component_register(SRCS "main.c"
                     REQUIRES esp_http_client
                     REQUIRES esp_timer
                     REQUIRES esp_wifi
-                    REQUIRES nvs_flash)
+                    REQUIRES nvs_flash
+                    REQUIRES esp_http_server)

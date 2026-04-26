@@ -50,6 +50,8 @@ static int s_retry_num = 0;
 int raw = 0;
 int hit_count = 0;
 
+static volatile bool unlocked = false;
+
 // ============================================================================
 // Motor functions
 // ============================================================================
@@ -125,7 +127,7 @@ static void motor_task(void *pvParameters)
 static esp_err_t trigger_motor_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "Received /trigger_motor request from Flask");
-
+    unlocked = true;
     // Notify the motor task to run
     xTaskNotifyGive(motor_task_handle);
 
@@ -462,11 +464,17 @@ void app_main(void)
             }
         }
 
+        if (unlocked) {
+            lvgl_port_lock(0);
+            lv_label_set_text(label_status, "Door Unlocked");
+            lvgl_port_unlock();
+
+            unlocked = false; // reset flag
+        }
+
         lvgl_port_lock(0);
         snprintf(buf, sizeof(buf), "Hits: %d", hit_count);
         lv_label_set_text(label_hits, buf);
-        lv_label_set_text(label_status,
-            hit_detected ? "Status: HIT!" : "Status: Idle");
         lvgl_port_unlock();
 
         vTaskDelay(pdMS_TO_TICKS(10));
