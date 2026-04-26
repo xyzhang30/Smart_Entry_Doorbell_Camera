@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 #include "driver/gpio.h"
 #include "driver/ledc.h"
 #include "driver/spi_master.h"
@@ -125,9 +127,74 @@ static void motor_task(void *pvParameters)
 // HTTP server — /trigger_motor endpoint (called by Flask after face recognition)
 // ============================================================================
 
+static lv_obj_t *status_label = NULL;
+static char unlock_message[128] = "Status: Idle";
+
+static bool extract_first_name(const char *payload, char *out_name, size_t out_size)
+{
+    const char *key = "\"recognized_names\"";
+    const char *start = strstr(payload, key);
+    if (!start) {
+        return false;
+    }
+    start = strchr(start, '[');
+    if (!start) {
+        return false;
+    }
+    start = strchr(start, '"');
+    if (!start) {
+        return false;
+    }
+    start++;
+    const char *end = strchr(start, '"');
+    if (!end || end <= start) {
+        return false;
+    }
+    size_t len = end - start;
+    if (len >= out_size) {
+        len = out_size - 1;
+    }
+    memcpy(out_name, start, len);
+    out_name[len] = '\0';
+    return true;
+}
+
 static esp_err_t trigger_motor_handler(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "Received /trigger_motor request from Flask");
+
+    char name[64] = "";
+    if (req->content_len > 0) {
+        int remaining = req->content_len;
+        int buf_len = remaining;
+        if (buf_len > 240) {
+            buf_len = 240;
+        }
+        char *buf = malloc(buf_len + 1);
+        if (buf) {
+            int received = 0;
+            while (remaining > 0 && received < buf_len) {
+                int ret = httpd_req_recv(req, buf + received, buf_len - received);
+                if (ret <= 0) {
+                    break;
+                }
+                received += ret;
+                remaining -= ret;
+            }
+            buf[received] = '\0';
+            ESP_LOGI(TAG, "Motor trigger payload: %s", buf);
+            extract_first_name(buf, name, sizeof(name));
+            free(buf);
+        } else {
+            ESP_LOGW(TAG, "Failed to allocate payload buffer");
+        }
+    }
+
+    if (name[0] != '\0') {
+        snprintf(unlock_message, sizeof(unlock_message), "Door Unlocked\nHi %s", name);
+    } else {
+        snprintf(unlock_message, sizeof(unlock_message), "Door Unlocked");
+    }
     unlocked = true;
     unlocked_time = xTaskGetTickCount();  // 👈 record time
     // Notify the motor task to run
@@ -463,7 +530,7 @@ void app_main(void)
             // Show unlocked for 8 seconds
             if ((now - unlocked_time) < pdMS_TO_TICKS(8000)) {
                 lvgl_port_lock(0);
-                lv_label_set_text(label_status, "Door Unlocked");
+                lv_label_set_text(label_status, unlock_message);
                 lvgl_port_unlock();
             } else {
                 lvgl_port_lock(0);

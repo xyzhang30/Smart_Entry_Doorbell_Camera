@@ -48,11 +48,17 @@ def _run_recognition(image_path):
     return found_names
 
 
-def _trigger_motor():
-    """POST to the ESP32 motor endpoint. Fire-and-forget; errors are logged but not raised."""
+def _trigger_motor(known_names=None):
+    """POST to the ESP32 motor endpoint with recognized person names.
+    Fire-and-forget; errors are logged but not raised.
+    """
+    if not known_names:
+        return
+
+    payload = {"recognized_names": known_names}
     try:
-        resp = requests.post(ESP32_MOTOR_URI, timeout=5)
-        print(f"[camera] Motor trigger response: {resp.status_code}")
+        resp = requests.post(ESP32_MOTOR_URI, json=payload, timeout=5)
+        print(f"[camera] Motor trigger response: {resp.status_code}, payload={payload}")
     except Exception as e:
         print(f"[camera] Motor trigger failed: {e}")
 
@@ -93,7 +99,7 @@ def add_user():
 
     # Trigger motor if at least one known face was recognized
     if known_found:
-        _trigger_motor()
+        _trigger_motor(known_found)
 
     try:
         new_log = Camera(image=fpath, timestamp=dt_object)
