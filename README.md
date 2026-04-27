@@ -37,7 +37,7 @@ Installation & Setup
 git clone https://github.com/xyzhang30/Smart_Entry_Doorbell_Camera.git
 cd Smart_Entry_Doorbell_Camera
 
-2. Run backend (Docker): Look in server folder
+2. Run backend (Docker):
 docker-compose up --build
 
 4. Flash ESP32 Devices  
